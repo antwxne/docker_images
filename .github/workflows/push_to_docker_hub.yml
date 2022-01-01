@@ -4,15 +4,21 @@ on:
   release:
     types: [published]
 
+  push:
+    branches:
+      - master
+    commit_ignore:
+      - [skip CI]
+
+workflow_dispatch: true
+
 jobs:
   push_to_registry:
-    env:
-      DOCKER_REPO: cmake
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        docker_repo: [conan, cmake]
     name: Push Docker image to Docker Hub
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -27,13 +33,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.docker_repo }}
       
-      - name: Build and push ${{ matrix.os }} image
+      - name: Build and push ${{ matrix.docker_repo }} image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        timeout-minutes: 60
         with:
-          context: ./${{ matrix.os }}
+          context: ./${{ matrix.docker_repo }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ matrix.os }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.docker_repo }}:latest
           labels: ${{ steps.meta.outputs.labels }}

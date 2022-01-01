@@ -11,3 +11,5 @@ WORKDIR /tmp/cmake-3.22.1
 RUN ./bootstrap
 RUN make
 RUN make install
+
+WORKDIR /
