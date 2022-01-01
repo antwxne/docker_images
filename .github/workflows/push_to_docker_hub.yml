@@ -10,8 +10,6 @@ on:
     commit_ignore:
       - [skip CI]
 
-workflow_dispatch: true
-
 jobs:
   push_to_registry:
     strategy:
