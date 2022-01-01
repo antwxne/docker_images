@@ -3,15 +3,16 @@ name: Publish Docker image
 on:
   release:
     types: [published]
-  push:
-    branches: [master]
 
 jobs:
   push_to_registry:
     env:
       DOCKER_REPO: cmake
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
     name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -28,11 +29,11 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}
       
-      - name: Build and push Docker image
+      - name: Build and push ${{ matrix.os }} image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         timeout-minutes: 60
         with:
-          context: ./Linux
+          context: ./${{ matrix.os }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:linux
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ matrix.os }}
           labels: ${{ steps.meta.outputs.labels }}
