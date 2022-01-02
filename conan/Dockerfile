@@ -1,3 +1,3 @@
 FROM python
 
-RUN pip install conan --upgrade
+ONBUILD RUN pip install conan --upgrade
