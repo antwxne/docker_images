@@ -19,7 +19,7 @@ if __FILE__ == $0
     file_in = open(ARGV[0], 'r')
     file_out = open(OutputFileName+".c", 'w')
 
-    file_out.write("#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\nchar *ptr = calloc(1<<16, sizeof(char));")
+    file_out.write("#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\nchar *ptr = calloc(30000, sizeof(char));")
     file_in.each_char do |c|
       file_out.write(Converter[c])
     end
