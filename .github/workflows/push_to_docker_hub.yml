@@ -11,7 +11,7 @@ jobs:
   push_to_registry:
     strategy:
       matrix:
-        docker_repo: [conan, cmake]
+        docker_repo: [conan, cmake, brainfuck-interpretor]
     name: Push ${{ matrix.docker_repo }} image to Docker Hub
     runs-on: ubuntu-latest
     steps:
